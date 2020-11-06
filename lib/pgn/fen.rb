@@ -39,6 +39,7 @@ module PGN
     #
     INITIAL = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
 
+    attr_reader :board_from_fen
     attr_accessor :board, :active, :castling, :en_passant, :halfmove, :fullmove
 
     # @return [PGN::FEN] a {PGN::FEN} object representing the starting
@@ -68,6 +69,7 @@ module PGN
           self.en_passant,
           self.halfmove,
           self.fullmove = fen_string.split
+          self.board_from_fen
       end
     end
 
@@ -143,6 +145,25 @@ module PGN
 
     def inspect
       self.to_s
+    end
+
+    def board_from_fen
+      board = []
+      ranks = self.board_string.split("/")
+      ranks.each do |rank|
+        complete_rank = []
+        rank.length.times do |item|
+          if !!(rank[item] =~ /\A[-+]?[0-9]+\z/)
+            rank[item].to_i.times do |_i|
+              complete_rank << '0'
+            end
+          else
+            complete_rank << rank[item]
+          end
+        end
+        board << complete_rank
+      end
+      board
     end
   end
 end

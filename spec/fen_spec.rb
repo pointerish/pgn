@@ -91,6 +91,22 @@ describe PGN::FEN do
     end
   end
 
+  describe "check in position" do
+    it "should return a hash on inspect" do
+      pos = PGN::FEN.new("4br1k/ppqnr1b1/3p3p/P1pP1p2/2P1pB2/6PP/1P2BP1N/R2QR1K1 w - - 3 25").to_position
+      pos.to_fen.fullmove.should == "25"
+      next_pos = pos.move("Qd2")
+      next_pos.to_fen.fullmove.should == "25"
+    end
+
+    it "should increase after black moves" do
+      pos = PGN::FEN.new("4br1k/ppqnr1b1/3p3p/P1pP1p2/2P1pB2/6PP/1P1QBP1N/R3R1K1 b - - 4 25").to_position
+      pos.to_fen.fullmove.should == "25"
+      next_pos = pos.move("Kh7")
+      next_pos.to_fen.fullmove.should == "26"
+    end
+  end
+
   describe "displaying FEN notation" do
     it "should return a string on inspect" do
       fen = PGN::FEN.start
